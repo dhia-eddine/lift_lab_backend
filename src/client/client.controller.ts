@@ -8,6 +8,8 @@ import {
   Delete,
   NotFoundException,
   UseGuards,
+  BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/client.dto';
@@ -32,11 +34,18 @@ export class ClientController {
   }
 
   @Get(':id')
+  @Get(':id')
   async findOne(@Param('id') id: string): Promise<Client> {
-    const client = await this.clientService.findOne(+id);
+    const parsedId = parseInt(id, 10);
+    if (isNaN(parsedId)) {
+      throw new BadRequestException(`Invalid id: ${id}`);
+    }
+
+    const client = await this.clientService.findOne(parsedId);
     if (!client) {
       throw new NotFoundException(`Client with ID ${id} not found`);
     }
+
     return client;
   }
 
@@ -80,5 +89,35 @@ export class ClientController {
     }
 
     await this.clientService.deleteSubscription(clientId, subId);
+  }
+
+  @Get('first-subscription-date/:id')
+  async firstDateSubscription(@Param('id') id: string): Promise<Date | null> {
+    const clientId = +id;
+
+    try {
+      const startDate =
+        await this.clientService.firstDateSubscription(clientId);
+      if (!startDate) {
+        throw new NotFoundException(
+          `No subscriptions found for client with ID ${clientId}`,
+        );
+      }
+      return startDate;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Get('total-fees/:id')
+  async totalFees(@Param('id') id: string): Promise<number> {
+    const clientId = +id;
+
+    try {
+      const totalFees = await this.clientService.totalFees(clientId);
+      return totalFees;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }

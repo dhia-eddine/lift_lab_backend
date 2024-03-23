@@ -79,4 +79,32 @@ export class ClientService {
 
     await this.subscriptionRepository.remove(subscription);
   }
+
+  async firstDateSubscription(clientId: number): Promise<Date | null> {
+    const client = await this.findOne(clientId);
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${clientId} not found`);
+    }
+
+    const subscriptions = client.subscriptions;
+    if (subscriptions.length === 0) {
+      return null; // Return null if the client has no subscriptions
+    }
+
+    // Sort subscriptions by date in ascending order
+    subscriptions.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    return subscriptions[0].date; // Return the start date of the first subscription
+  }
+
+  async totalFees(clientId: number): Promise<number> {
+    const client = await this.findOne(clientId);
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${clientId} not found`);
+    }
+    return client.subscriptions.reduce(
+      (total, subscription) => total + subscription.fees,
+      0,
+    );
+  }
 }
