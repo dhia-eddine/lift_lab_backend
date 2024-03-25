@@ -5,6 +5,11 @@ import { CreateClientDto } from './dto/client.dto';
 import { Client } from './client.entity';
 import { Subscription } from './subscription.entity';
 import { UpdateClientDto } from './dto/update-client.dto';
+interface FeesByMonth {
+  month: number;
+  year: number;
+  totalFees: number;
+}
 
 @Injectable()
 export class ClientService {
@@ -106,5 +111,34 @@ export class ClientService {
       (total, subscription) => total + subscription.fees,
       0,
     );
+  }
+
+  async getTotalFeesByMonth(): Promise<FeesByMonth[]> {
+    const subscriptions = await this.subscriptionRepository.find();
+
+    const feesByMonth = subscriptions.reduce((acc, subscription) => {
+      const month = subscription.date.getMonth() + 1;
+      const year = subscription.date.getFullYear();
+      const key = `${year}-${month}`;
+
+      if (!acc[key]) {
+        acc[key] = { month, year, totalFees: 0 };
+      }
+
+      acc[key].totalFees += subscription.fees;
+      return acc;
+    }, {});
+
+    const result = Object.values(feesByMonth) as FeesByMonth[];
+
+    // Sort the result array in ascending order based on year and month
+    result.sort((a, b) => {
+      if (a.year === b.year) {
+        return a.month - b.month;
+      }
+      return a.year - b.year;
+    });
+
+    return result;
   }
 }

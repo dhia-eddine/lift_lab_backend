@@ -32,21 +32,11 @@ export class ClientController {
   async findAll(): Promise<Client[]> {
     return this.clientService.findAll();
   }
-
-  @Get(':id')
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Client> {
-    const parsedId = parseInt(id, 10);
-    if (isNaN(parsedId)) {
-      throw new BadRequestException(`Invalid id: ${id}`);
-    }
-
-    const client = await this.clientService.findOne(parsedId);
-    if (!client) {
-      throw new NotFoundException(`Client with ID ${id} not found`);
-    }
-
-    return client;
+  @Get('total-fees-by-month')
+  async getTotalFeesByMonth(): Promise<
+    { month: number; year: number; totalFees: number }[]
+  > {
+    return this.clientService.getTotalFeesByMonth();
   }
 
   @Put(':id')
@@ -119,5 +109,19 @@ export class ClientController {
     } catch (error) {
       throw new NotFoundException(error.message);
     }
+  }
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Client> {
+    const parsedId = parseInt(id, 10);
+    if (isNaN(parsedId)) {
+      throw new BadRequestException(`Invalid id: ${id}`);
+    }
+
+    const client = await this.clientService.findOne(parsedId);
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+
+    return client;
   }
 }
