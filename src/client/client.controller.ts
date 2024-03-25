@@ -110,6 +110,15 @@ export class ClientController {
       throw new NotFoundException(error.message);
     }
   }
+  @Get('active')
+  async getActiveClients(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ data: Client[]; totalCount: number }> {
+    const [activeClients, totalCount] =
+      await this.clientService.getActiveClients(page, limit);
+    return { data: activeClients, totalCount };
+  }
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Client> {
     const parsedId = parseInt(id, 10);

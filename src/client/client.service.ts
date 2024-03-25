@@ -141,4 +141,23 @@ export class ClientService {
 
     return result;
   }
+  async getActiveClients(
+    page: number,
+    limit: number,
+  ): Promise<[Client[], number]> {
+    const skip = (page - 1) * limit;
+    const [activeClients, totalCount] =
+      await this.clientRepository.findAndCount({
+        relations: ['subscriptions'],
+        where: {
+          subscriptions: {
+            active: true,
+          },
+        },
+        skip,
+        take: limit,
+      });
+
+    return [activeClients, totalCount];
+  }
 }
