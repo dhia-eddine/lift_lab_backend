@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ClientModule } from './client/client.module';
+import { CoachModule } from './coach/coach.module';
 
 
 @Module({
@@ -20,7 +21,7 @@ import { ClientModule } from './client/client.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    AuthModule, UsersModule, ClientModule],
+    AuthModule, UsersModule, ClientModule, CoachModule],
   controllers: [AppController],
   providers: [AppService],
 })
