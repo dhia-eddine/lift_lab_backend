@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class UpdateCoachDto {
   @IsOptional()
@@ -21,4 +27,7 @@ export class UpdateCoachDto {
   @IsString()
   @IsNotEmpty()
   specialist?: string;
+
+  @IsBoolean()
+  active?: boolean;
 }

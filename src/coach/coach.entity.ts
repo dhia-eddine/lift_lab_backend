@@ -19,4 +19,7 @@ export class Coach {
 
   @Column({ nullable: true })
   picture: string;
+
+  @Column({ default: true })
+  active: boolean;
 }
