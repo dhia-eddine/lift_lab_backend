@@ -43,4 +43,15 @@ export class CoachController {
   async displayAllCoaches(): Promise<Coach[]> {
     return this.coachService.displayAllCoaches();
   }
+  @Get('active/count')
+  async countActiveCoaches(): Promise<{ count: number }> {
+    const count = await this.coachService.countActiveCoaches();
+    return { count };
+  }
+
+  @Put(':id/activate')
+  async activateCoach(@Param('id') id: string): Promise<Coach> {
+    const coachId = +id;
+    return this.coachService.toggleCoachStatus(coachId);
+  }
 }

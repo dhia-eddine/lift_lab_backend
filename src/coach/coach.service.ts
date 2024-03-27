@@ -40,4 +40,16 @@ export class CoachService {
   async displayAllCoaches(): Promise<Coach[]> {
     return this.coachRepository.find();
   }
+  async countActiveCoaches(): Promise<number> {
+    return this.coachRepository.count({ where: { active: true } });
+  }
+
+  async toggleCoachStatus(id: number): Promise<Coach> {
+    const coach = await this.coachRepository.findOne({ where: { id } });
+    if (!coach) {
+      throw new NotFoundException(`Coach with ID ${id} not found`);
+    }
+    coach.active = !coach.active; // Toggle active status
+    return this.coachRepository.save(coach);
+  }
 }
