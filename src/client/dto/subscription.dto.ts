@@ -6,6 +6,10 @@ export class CreateSubscriptionDto {
   date: Date;
 
   @IsNotEmpty()
+  @IsDate()
+  endDate: Date;
+
+  @IsNotEmpty()
   @IsNumber()
   fees: number;
 

@@ -9,6 +9,9 @@ export class Subscription {
   @Column()
   date: Date;
 
+  @Column({ nullable: true })
+  endDate: Date;
+
   @Column()
   fees: number;
 
