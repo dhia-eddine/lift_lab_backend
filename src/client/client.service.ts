@@ -63,6 +63,7 @@ export class ClientService {
     const client = await this.findOne(clientId);
     const subscription = this.subscriptionRepository.create({
       date: subscriptionData.date,
+      endDate: subscriptionData.endDate,
       fees: subscriptionData.fees,
       active: subscriptionData.active,
       client,
