@@ -119,6 +119,18 @@ export class ClientController {
       await this.clientService.getActiveClients(page, limit);
     return { data: activeClients, totalCount };
   }
+
+  @Get(':id/subscription-period')
+  async getSubscriptionPeriod(@Param('id') id: string): Promise<number | null> {
+    const clientId = +id;
+    try {
+      const period = await this.clientService.getSubscriptionPeriod(clientId);
+      return period;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Client> {
     const parsedId = parseInt(id, 10);

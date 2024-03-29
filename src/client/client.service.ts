@@ -161,4 +161,29 @@ export class ClientService {
 
     return [activeClients, totalCount];
   }
+
+  async getSubscriptionPeriod(clientId: number): Promise<number | null> {
+    const client = await this.findOne(clientId);
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${clientId} not found`);
+    }
+
+    const subscriptions = client.subscriptions;
+    if (subscriptions.length === 0) {
+      return null; // Return null if the client has no subscriptions
+    }
+
+    const currentDate = new Date();
+
+    // Find the latest subscription and calculate the period
+    const latestSubscription = subscriptions.reduce((prev, current) =>
+      prev.endDate > current.endDate ? prev : current,
+    );
+
+    const endDate = new Date(latestSubscription.endDate);
+    const periodInMillis = endDate.getTime() - currentDate.getTime();
+    const periodInDays = Math.ceil(periodInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+
+    return periodInDays;
+  }
 }
