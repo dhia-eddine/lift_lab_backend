@@ -15,7 +15,7 @@ export class Coach {
   mobile: string;
 
   @Column()
-  specialist: string;
+  specialty: string;
 
   @Column({ nullable: true })
   picture: string;

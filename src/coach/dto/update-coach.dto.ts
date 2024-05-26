@@ -26,7 +26,7 @@ export class UpdateCoachDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  specialist?: string;
+  specialty?: string;
 
   @IsBoolean()
   active?: boolean;

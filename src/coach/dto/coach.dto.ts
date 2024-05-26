@@ -21,7 +21,7 @@ export class CreateCoachDto {
   mobile: string;
 
   @IsString()
-  specialist: string;
+  specialty: string;
 
   @IsBoolean()
   active?: boolean;
